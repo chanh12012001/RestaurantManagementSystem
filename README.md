@@ -1,11 +1,14 @@
 # RestaurantManager
 
 Thông tin nhóm:
+Project Management
 - Phạm Văn Chánh – 19521092
-- Phạm Gia Bảo  – 19521254
-- Hồ Quang – 19521264
+- Hồ Quang – 19520875
+- Lê Ngọc Minh - 20521600
+- Nguyễn Quang Vũ - 20520352
+Software Testing
 
-Link github: https://github.com/bao200118/RestaurantManager.git
+Link github: https://github.com/chanh12012001/RestaurantManagementSystem.git
 
 Hướng dẫn cài đặt và run source code:
 
@@ -19,7 +22,7 @@ Bước 2: Tạo hoặc mở một thư mục có sẵn để chứa project
 
 Bước 3: Chuột phải vào bất kì đâu trong thư mục và chọn "Git Bash here"
 
-Bước 4: Gõ lệnh "git clone https://github.com/bao200118/RestaurantManager.git"
+Bước 4: Gõ lệnh "git clone https://github.com/chanh12012001/RestaurantManagementSystem.git"
 
 Bước 5: Cài đặt Thư viện vào project
 
