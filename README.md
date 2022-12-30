@@ -1,12 +1,14 @@
 # RestaurantManager
 
 Thông tin nhóm:
-Project Management
+* Project Management
 - Phạm Văn Chánh – 19521092
 - Hồ Quang – 19520875
 - Lê Ngọc Minh - 20521600
 - Nguyễn Quang Vũ - 20520352
-Software Testing
+* Software Testing
+- Phan Huy Mạnh – 19521828
+- Trần Quốc Huy – 20520554
 
 Link github: https://github.com/chanh12012001/RestaurantManagementSystem.git
 
