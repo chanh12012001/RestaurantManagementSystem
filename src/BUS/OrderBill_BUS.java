@@ -9,6 +9,10 @@ import DTO.Statistic_DTO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import Generator.PDFGenerator;
+
+import Interface.OrderBillObserver;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,6 +25,23 @@ import java.util.ArrayList;
 public class OrderBill_BUS {
 
     static IOrderBill_DAO orderBill_DAO = new OrderBill_DAO();
+    
+    
+    private static List<OrderBillObserver> observers = new ArrayList<>();
+
+    public static void addObserver(OrderBillObserver observer) {
+        observers.add(observer);
+    }
+
+    public static void removeObserver(OrderBillObserver observer) {
+        observers.remove(observer);
+    }
+
+    private static void notifyObservers(OrderBill_DTO orderBill) {
+        for (OrderBillObserver observer : observers) {
+            observer.onPaymentSuccess(orderBill);
+        }
+    }
 
     /**
      * Get food order of table by table id
@@ -69,9 +90,15 @@ public class OrderBill_BUS {
      * @return A Boolean true if success, otherwise false
      */
     public static boolean checkoutBill(OrderBill_DTO orderBill) {
-        return orderBill_DAO.checkoutBill(orderBill)
+        boolean success = orderBill_DAO.checkoutBill(orderBill)
                 && orderBill_DAO.deleteAllBillDetail(orderBill.getId())
                 && DinnerTable_BUS.setStatusEmpty(orderBill.getIdTable());
+
+        if (success) {
+            notifyObservers(orderBill);
+        }
+
+        return success; 
     }
 
     /**

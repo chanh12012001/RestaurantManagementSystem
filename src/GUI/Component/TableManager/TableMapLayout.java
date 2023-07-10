@@ -15,6 +15,7 @@ import DTO.OrderDetail_DTO;
 import DTO.TableModelItemUI;
 import GUI.Component.RoundedButton;
 import GUI.Component.TableManager.FoodCard.FoodCard;
+import Generator.PDFGenerator;
 import Interface.EventTextChange;
 import Utils.DateUtils;
 import Utils.ImageUtils;
@@ -742,6 +743,8 @@ public class TableMapLayout extends JPanel {
     }
 
     private void btnPaymentActionPerformed(ActionEvent evt) {
+        PDFGenerator pdfGenerator = new PDFGenerator();
+        OrderBill_BUS.addObserver(pdfGenerator);
         OrderBill_BUS.checkoutBill(new OrderBill_DTO(
                 selectedOrderBillId,
                 indexTable,
