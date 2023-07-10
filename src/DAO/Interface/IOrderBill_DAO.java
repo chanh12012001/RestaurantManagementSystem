@@ -95,35 +95,4 @@ public interface IOrderBill_DAO extends DAO<OrderBill_DTO> {
      */
     public boolean deleteAll();
 
-    /**
-     * Statistic income of month in year
-     *
-     * @param year year to statistic
-     * @return A list of total income each month in year
-     */
-    public ArrayList<Statistic_DTO> statisticIncomeByMonth(String year);
-
-    /**
-     * Statistic income of each year
-     *
-     * @return A list of total income each year
-     */
-    public ArrayList<Statistic_DTO> statisticIncomeByYear();
-
-    /**
-     * Statistic income in today
-     *
-     * @param date date format dd/MM/YYYY
-     * @return A list of income in date
-     */
-    public Statistic_DTO statisticIncomeInDay(String date);
-
-    /**
-     * Statistic income by date
-     *
-     * @param fromDate from date format dd/MM/YYYY
-     * @param toDate to date format dd/MM/YYYY
-     * @return A list of income in date
-     */
-    public ArrayList<Statistic_DTO> statisticIncomeByDate(String fromDate, String toDate);
 }

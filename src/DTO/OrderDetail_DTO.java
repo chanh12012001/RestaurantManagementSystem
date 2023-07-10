@@ -39,7 +39,7 @@ public class OrderDetail_DTO {
         this.price = price;
         this.total = amount * price;
     }
-
+    
     /**
      * Constructs a OrderBill_DTO without id.
      *

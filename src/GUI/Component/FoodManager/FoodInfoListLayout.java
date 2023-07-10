@@ -1,7 +1,7 @@
 package GUI.Component.FoodManager;
 
-import BUS.FoodGroup_BUS;
 import BUS.Food_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.Food_DTO;
 import Utils.ImageUtils;
 import GUI.Component.RoundedButton;
@@ -47,7 +47,7 @@ import javax.swing.table.DefaultTableModel;
 public class FoodInfoListLayout extends JPanel{
     private final Dimension dimension;
     String[] properties = { "ID", "Tên nhóm món", "Tên món", "Đơn vị tính", "Giá", "Ảnh"};
-
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public FoodInfoListLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -58,7 +58,8 @@ public class FoodInfoListLayout extends JPanel{
     private void initComponents() {
         int width = dimension.width;
         int height = dimension.height - dimension.height / 22 - 10;
-       
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
+        
         // object initialization
         cbFoodGroup = new JComboBox<>();
         tfFoodName = new RoundedTextField();
@@ -72,9 +73,9 @@ public class FoodInfoListLayout extends JPanel{
         tfFilterFoodName = new RoundedTextField();
         cbFilterFoodGroup = new JComboBox<>();       
         dcbmFoodGroupModeInfo = new DefaultComboBoxModel();
-        FoodGroup_BUS.getAllFoodGroupNames(dcbmFoodGroupModeInfo);
+        restaurantManagementFacade.getAllFoodGroupNames(dcbmFoodGroupModeInfo);
         dcbmFoodGroupModeFilter = new DefaultComboBoxModel();
-        FoodGroup_BUS.getAllFoodGroupNames(dcbmFoodGroupModeFilter);
+        restaurantManagementFacade.getAllFoodGroupNames(dcbmFoodGroupModeFilter);
         
         dtmTableModel = new DefaultTableModel(properties, 0) {
             @Override
@@ -95,7 +96,7 @@ public class FoodInfoListLayout extends JPanel{
             rowSelectedListener(e);
         });
 
-        Food_BUS.getAllFoods(dtmTableModel);
+        restaurantManagementFacade.getAllFoods(dtmTableModel);
         
         JPanel infoLayout = new JPanel();
         infoLayout.setPreferredSize(new Dimension(width, (int) (height / 2)));
@@ -547,7 +548,7 @@ public class FoodInfoListLayout extends JPanel{
     }
     
     private void btnAddFoodActionPerformed(ActionEvent evt) { 
-        Food_DTO foodCheck = Food_BUS.getFoodByName(tfFoodName.getText());
+        Food_DTO foodCheck = restaurantManagementFacade.getFoodByName(tfFoodName.getText());
         if (foodCheck != null) {
             clearData();
             JOptionPane.showMessageDialog(null, "Món ăn đã tồn tại", "Thêm món ăn",
@@ -559,9 +560,9 @@ public class FoodInfoListLayout extends JPanel{
             }      
             
             int price = "".equals(tfPrice.getText()) ? -1 : Integer.valueOf(tfPrice.getText());
-            Food_BUS.addFood(new Food_DTO(image, cbFoodGroup.getSelectedItem().toString(), tfFoodName.getText(), tfUnit.getText(), price));                    
+            restaurantManagementFacade.addFood(new Food_DTO(image, cbFoodGroup.getSelectedItem().toString(), tfFoodName.getText(), tfUnit.getText(), price));                    
             
-            Food_BUS.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
+            restaurantManagementFacade.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
             if ("".equals(tfFoodName.getText()) || "".equals(tfUnit.getText()) || "".equals(tfPrice.getText()) || imageFile == null) {
                 // Vẫn còn thuộc tính chưa điền
             } else {
@@ -573,13 +574,13 @@ public class FoodInfoListLayout extends JPanel{
     }
     
     private void btnUpdateFoodActionPerformed(ActionEvent evt) { 
-        Food_DTO foodCheck = Food_BUS.getFoodById(foodId);
+        Food_DTO foodCheck = restaurantManagementFacade.getFoodById(foodId);
         
         if (foodCheck != null) {
             byte[] image = imageFile != null ? ImageUtils.convertFileToByteArray(imageFile) : foodCheck.getImage();
             int price = "".equals(tfPrice.getText()) ? -1 : Integer.valueOf(tfPrice.getText());
-            Food_BUS.updateFood(new Food_DTO(foodId, image, cbFoodGroup.getSelectedItem().toString(), tfFoodName.getText(), tfUnit.getText(), price));
-            Food_BUS.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
+            restaurantManagementFacade.updateFood(new Food_DTO(foodId, image, cbFoodGroup.getSelectedItem().toString(), tfFoodName.getText(), tfUnit.getText(), price));
+            restaurantManagementFacade.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
             clearData();
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn món ăn cần cập nhật", "Cập nhật món ăn",
@@ -589,20 +590,20 @@ public class FoodInfoListLayout extends JPanel{
     }
     
     private void btnDeleteFoodActionPerformed(ActionEvent evt) { 
-        Food_BUS.deleteFood(String.valueOf(foodId));
-        Food_BUS.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
+        restaurantManagementFacade.deleteFood(String.valueOf(foodId));
+        restaurantManagementFacade.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
         clearData();
     }
     
     private void tfSearchTextChangeActionPerformed(DocumentEvent evt) {
-        Food_BUS.findFoodsByName((DefaultTableModel) tbFoodInfoList.getModel(), tfFilterFoodName.getText());
+        restaurantManagementFacade.findFoodsByName((DefaultTableModel) tbFoodInfoList.getModel(), tfFilterFoodName.getText());
     }
     
     private void cbFilterFoodGroupChangeActionPerformed(ActionEvent e) {
         if ("Tất cả".equals(String.valueOf(cbFilterFoodGroup.getSelectedItem()))) {
-            Food_BUS.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
+            restaurantManagementFacade.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
         } else {
-            Food_BUS.findFoodsByGroupName((DefaultTableModel) tbFoodInfoList.getModel(), String.valueOf(cbFilterFoodGroup.getSelectedItem()));
+            restaurantManagementFacade.findFoodsByGroupName((DefaultTableModel) tbFoodInfoList.getModel(), String.valueOf(cbFilterFoodGroup.getSelectedItem()));
         }
     }
     

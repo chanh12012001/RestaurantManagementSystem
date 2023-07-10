@@ -14,7 +14,7 @@ public class Account_BUS {
 
     static IAccount_DAO account_DAO = new Account_DAO();
 
-    public static void getAllAccount(DefaultTableModel tableModel) {
+    public void getAllAccount(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<Account_DTO> accountList = account_DAO.getAll();
         for (Account_DTO account : accountList) {
@@ -29,7 +29,7 @@ public class Account_BUS {
      * @param password account password
      * @return A account contain username and password, otherwise null
      */
-    public static Account_DTO Login(String username, String password) {
+    public Account_DTO Login(String username, String password) {
         Account_DTO account = account_DAO.get(username);
         if (account != null) {
             if (account.getPassword().equals(password)) {
@@ -44,7 +44,7 @@ public class Account_BUS {
      * @param account
      * @return A Boolean representing true if success, otherwise false
      */
-    public static boolean update(Account_DTO account) {
+    public  boolean update(Account_DTO account) {
         return account_DAO.update(account);
     }
 }

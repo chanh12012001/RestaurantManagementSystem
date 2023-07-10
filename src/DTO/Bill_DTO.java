@@ -14,7 +14,7 @@ public class Bill_DTO {
     private String DateOfPayment;
     private String price;
     
-    
+     
     /**
      * Constructs a Bill_DTO with id.
      *
@@ -30,7 +30,7 @@ public class Bill_DTO {
         this.DateOfPayment = DateOfPayment;
         this.price = price;
     }
-
+    
     /**
      * Gets the bill 's id.
      *

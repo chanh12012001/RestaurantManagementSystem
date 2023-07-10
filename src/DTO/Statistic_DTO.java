@@ -28,7 +28,7 @@ public class Statistic_DTO {
         this.index = index;
         this.income = income;
     }
-
+    
     /**
      *
      * @return

@@ -3,6 +3,8 @@ package BUS;
 import DTO.DinnerTable_DTO;
 import DAO.DinnerTable_DAO;
 import DAO.Interface.IDinnerTable_DAO;
+import DAO.Interface.IOrderBill_DAO;
+import DAO.OrderBill_DAO;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,8 +15,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DinnerTable_BUS {
     static IDinnerTable_DAO dinnerTable_DAO = new DinnerTable_DAO();
+    static IOrderBill_DAO orderBill_DAO = new OrderBill_DAO();
     
-    public static void getAllTableInfo(DefaultTableModel tableModel) {
+    public void getAllTableInfo(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<DinnerTable_DTO> dinnerTableList = dinnerTable_DAO.getAll();
         for (DinnerTable_DTO dinnerTable : dinnerTableList) {
@@ -23,17 +26,17 @@ public class DinnerTable_BUS {
         }
     }
     
-    public static DinnerTable_DTO getTableInfoByTableName(String dinnerTableName) {
+    public DinnerTable_DTO getTableInfoByTableName(String dinnerTableName) {
         DinnerTable_DTO dinnerTableCheckDTO = dinnerTable_DAO.getDinnerTableByTableName(dinnerTableName);
         return dinnerTableCheckDTO;
     }
     
-    public static DinnerTable_DTO getTableInfoByTableId(int dinnerTableId) {
+    public DinnerTable_DTO getTableInfoByTableId(int dinnerTableId) {
         DinnerTable_DTO dinnerTableCheckDTO = dinnerTable_DAO.getDinnerTableByTableId(dinnerTableId);
         return dinnerTableCheckDTO;
     }
 
-    public static void addTableInfo(String dinnerTableName) {
+    public void addTableInfo(String dinnerTableName) {
         DinnerTable_DTO dinnerTableCheckDTO = dinnerTable_DAO.getDinnerTableByTableName(dinnerTableName);
         if (dinnerTableCheckDTO == null) {
             if (dinnerTable_DAO.add(new DinnerTable_DTO(dinnerTableName))) {
@@ -49,7 +52,7 @@ public class DinnerTable_BUS {
         }
     }
 
-    public static void updateTableInfo(int dinnerTableId, String dinnerTableName) {
+    public void updateTableInfo(int dinnerTableId, String dinnerTableName) {
 
         DinnerTable_DTO dinnerTableCheckDTO = dinnerTable_DAO.getDinnerTableByTableName(dinnerTableName);
 
@@ -67,7 +70,7 @@ public class DinnerTable_BUS {
         }
     }
 
-    public static void deleteTableInfo(String dinnerTableId) {
+    public void deleteTableInfo(String dinnerTableId) {
 
         int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa bàn ăn", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
@@ -84,7 +87,7 @@ public class DinnerTable_BUS {
         }
     }
     
-    public static void findTableInfos(DefaultTableModel tableModel, String name) {
+    public void findTableInfos(DefaultTableModel tableModel, String name) {
         tableModel.setRowCount(0);
         ArrayList<DinnerTable_DTO> dinnerTableList = dinnerTable_DAO.findTables(name);
         for (DinnerTable_DTO dinnerTable : dinnerTableList) {
@@ -93,11 +96,11 @@ public class DinnerTable_BUS {
         }
     }
     
-    public static boolean setStatusOccupied(int id) {
-        return dinnerTable_DAO.setStatusOccupied(id) && OrderBill_BUS.add(id);
+    public boolean setStatusOccupied(int id) {
+        return dinnerTable_DAO.setStatusOccupied(id) && orderBill_DAO.add(id);
     }
     
-    public static boolean setStatusEmpty(int id) {
+    public boolean setStatusEmpty(int id) {
         return dinnerTable_DAO.setStatusEmpty(id);
     }
 }

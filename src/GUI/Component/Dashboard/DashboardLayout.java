@@ -1,5 +1,9 @@
 package GUI.Component.Dashboard;
 
+import DAO.Constant;
+import DAO.strategy.AccessControl.EmployeeAccessStrategy;
+import DAO.strategy.AccessControl.ManagerAccessStrategy;
+import DAO.strategy.IAccessControlStrategy;
 import GUI.BillManagerJFrame;
 import GUI.FoodManagerJFrame;
 import GUI.LoginJFrame;
@@ -21,7 +25,9 @@ import javax.swing.SwingUtilities;
 public class DashboardLayout extends JPanel {
 
     private final Dimension dimension;
-    private String accountType = "NV";
+    private String accountType = Constant.EMPLOYEE_ACCOUNT_TYPE;
+    private IAccessControlStrategy accessControlStrategy;
+
 
     public DashboardLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -34,6 +40,12 @@ public class DashboardLayout extends JPanel {
         this.accountType = accountType;
         initComponents();
         setOpaque(false);
+        
+        if (accountType.equals(Constant.EMPLOYEE_ACCOUNT_TYPE)) {
+            accessControlStrategy = new EmployeeAccessStrategy();
+        } else {
+            accessControlStrategy = new ManagerAccessStrategy();
+        } 
     }
 
     private void initComponents() {
@@ -55,28 +67,24 @@ public class DashboardLayout extends JPanel {
                 case 0 ->
                     bodyLayout.show(new TableManagerJFrame(dimensionBodyLayout));
                 case 1 -> {
-                    if (accountType.equals("QL")) {
-                        bodyLayout.show(new FoodManagerJFrame(dimensionBodyLayout));
-                    } else {
-                        JOptionPane.showMessageDialog(bodyLayout, "Bạn không đủ thẩm quyền", "Thẩm quyền", JOptionPane.WARNING_MESSAGE);
-                    }
+                    bodyLayout.show(new FoodManagerJFrame(dimensionBodyLayout));
                 }
 
                 case 2 -> {
-                    if (accountType.equals("QL")) {
+                    if (accessControlStrategy.checkAccess(Constant.MANAGER_ACCOUNT_TYPE)) {
                         bodyLayout.show(new StaffManagerJFrame(dimensionBodyLayout));
                     } else {
-                        JOptionPane.showMessageDialog(bodyLayout, "Bạn không đủ thẩm quyền", "Thẩm quyền", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(bodyLayout, "Chỉ có quản lý mới có thể truy cập vào tính năng này", "Quyền truy cập", JOptionPane.WARNING_MESSAGE);
                     }
                 }
 
                 case 3 ->
                     bodyLayout.show(new BillManagerJFrame(dimensionBodyLayout));
                 case 4 -> {
-                    if (accountType.equals("QL")) {
+                    if (accessControlStrategy.checkAccess(Constant.MANAGER_ACCOUNT_TYPE)) {
                         bodyLayout.show(new StatisticJFrame(dimensionBodyLayout));
                     } else {
-                        JOptionPane.showMessageDialog(bodyLayout, "Bạn không đủ thẩm quyền", "Thẩm quyền", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(bodyLayout, "Chỉ có quản lý mới có thể truy cập vào tính năng này", "Quyền truy cập", JOptionPane.WARNING_MESSAGE);
                     }
                 }
                 case 5 ->

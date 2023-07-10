@@ -14,6 +14,7 @@ import java.util.ArrayList;
  */
 public class BillDetail_DAO implements IBillDetail_DAO{
     static Connection conn;
+      SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
 
     /**
      * Get bill detail by table id from database
@@ -27,7 +28,7 @@ public class BillDetail_DAO implements IBillDetail_DAO{
         ArrayList<BillDetail_DTO> billDetails = new ArrayList<>();
 
         String sqlStatement = "select HoaDonInFo.ID,HoaDonInfo.IDMonAn, MonAn.TenMonAn,HoaDonInFo.SoLuong,MonAn.Gia, (HoaDonInFo.SoLuong * MonAn.Gia) as ThanhTien from BanAn, HoaDon, MonAn, HoaDonInFo where HoaDonInFo.IDMonAn = MonAn.ID AND HoaDonInFo.IDHoaDon = HoaDon.ID and HoaDon.IDBan = BanAn.ID AND BanAn.ID = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, tableId);
 
         try {
@@ -49,7 +50,7 @@ public class BillDetail_DAO implements IBillDetail_DAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return billDetails;
     }
 

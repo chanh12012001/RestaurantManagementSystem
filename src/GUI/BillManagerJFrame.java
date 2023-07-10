@@ -1,6 +1,6 @@
 package GUI;
 
-import BUS.Bill_BUS;
+import BUS.RestaurantManagementFacade;
 import Utils.DateUtils;
 import GUI.Component.RoundedButton;
 import com.toedter.calendar.JDateChooser;
@@ -31,6 +31,7 @@ public class BillManagerJFrame extends JPanel {
 
     private final Dimension dimension;
     String[] properties = {"Số Hoá Đơn ", "Tên bàn", "Ngày Thanh toán", "Số tiền"};
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public BillManagerJFrame(Dimension dimension) {
         this.dimension = dimension;
@@ -41,6 +42,7 @@ public class BillManagerJFrame extends JPanel {
     private void initComponents() {
         int bodyWidth = dimension.width;
         int bodyHeight = dimension.height;
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
 
         dtpFromDate = new JDateChooser();
         dtpToDate = new JDateChooser();
@@ -54,7 +56,7 @@ public class BillManagerJFrame extends JPanel {
             }
         };
         tbBills = new JTable(dtmTableModel);
-        Bill_BUS.getAllBills(dtmTableModel);
+        restaurantManagementFacade.getAllBills(dtmTableModel);
 
         setPreferredSize(new Dimension(bodyWidth, bodyHeight));
 
@@ -219,11 +221,11 @@ public class BillManagerJFrame extends JPanel {
 //            Food_BUS.getAllFoods((DefaultTableModel) tbFoodInfoList.getModel());
 //        } else {
 //        }
-        Bill_BUS.getAllBillsBetweenFromDayAndToDay((DefaultTableModel) tbBills.getModel(), DateUtils.formatDate(dtpFromDate.getDate()), DateUtils.formatDate(dtpToDate.getDate()));
+        restaurantManagementFacade.getAllBillsBetweenFromDayAndToDay((DefaultTableModel) tbBills.getModel(), DateUtils.formatDate(dtpFromDate.getDate()), DateUtils.formatDate(dtpToDate.getDate()));
     }
 
     private void btnShowAllActionPerformed(ActionEvent evt) {
-        Bill_BUS.getAllBills((DefaultTableModel) tbBills.getModel());
+        restaurantManagementFacade.getAllBills((DefaultTableModel) tbBills.getModel());
     }
 
     @Override

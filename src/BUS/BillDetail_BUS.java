@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 public class BillDetail_BUS {
     static IBillDetail_DAO billDetail_DAO = new BillDetail_DAO();
     
-    public static ArrayList<BillDetail_DTO> loadBillDetailByTableId(DefaultTableModel tableModel, int tableId) {
+    public ArrayList<BillDetail_DTO> loadBillDetailByTableId(DefaultTableModel tableModel, int tableId) {
         tableModel.setRowCount(0);
         ArrayList<BillDetail_DTO> billDetailList = billDetail_DAO.loadBillDetailByTableId(tableId);
         for (BillDetail_DTO billDetail : billDetailList) {

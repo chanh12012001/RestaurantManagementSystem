@@ -1,6 +1,7 @@
 package GUI.Component.TableManager;
 
 import BUS.DinnerTable_BUS;
+import BUS.RestaurantManagementFacade;
 import GUI.Component.RoundedButton;
 import GUI.Component.RoundedTextField;
 import Interface.EventTextChange;
@@ -34,6 +35,7 @@ public class TableInfomationLayout extends JPanel {
 
     private final Dimension dimension;
     String[] properties = {"ID Bàn", "Tên bàn", "Trạng thái"};
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public TableInfomationLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -44,6 +46,7 @@ public class TableInfomationLayout extends JPanel {
     private void initComponents() {
         int tableInfoWidth = dimension.width;
         int tableInfoHeight = dimension.height - dimension.height / 22 - 10;
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
 
         tfTableID = new RoundedTextField();
         tfTableName = new RoundedTextField();
@@ -65,7 +68,7 @@ public class TableInfomationLayout extends JPanel {
             rowSelectedListener(e);
         });
 
-        DinnerTable_BUS.getAllTableInfo(dtmTableModel);
+        restaurantManagementFacade.getAllTableInfo(dtmTableModel);
 
         /**
          * info Staff Form Layout
@@ -359,22 +362,22 @@ public class TableInfomationLayout extends JPanel {
     }
 
     private void btnAddTableActionPerformed(ActionEvent evt) {
-        DinnerTable_BUS.addTableInfo(tfTableName.getText());
-        DinnerTable_BUS.getAllTableInfo((DefaultTableModel) tbTable.getModel());
+        restaurantManagementFacade.addTableInfo(tfTableName.getText());
+        restaurantManagementFacade.getAllTableInfo((DefaultTableModel) tbTable.getModel());
     }
 
     private void btnUpdateTableActionPerformed(ActionEvent evt) {
-        DinnerTable_BUS.updateTableInfo(Integer.parseInt(tfTableID.getText()), tfTableName.getText());
-        DinnerTable_BUS.getAllTableInfo((DefaultTableModel) tbTable.getModel());
+        restaurantManagementFacade.updateTableInfo(Integer.parseInt(tfTableID.getText()), tfTableName.getText());
+        restaurantManagementFacade.getAllTableInfo((DefaultTableModel) tbTable.getModel());
     }
 
     private void btnDeleteTableGroupActionPerformed(ActionEvent evt) {
-        DinnerTable_BUS.deleteTableInfo(tfTableID.getText());
-        DinnerTable_BUS.getAllTableInfo((DefaultTableModel) tbTable.getModel());
+        restaurantManagementFacade.deleteTableInfo(tfTableID.getText());
+        restaurantManagementFacade.getAllTableInfo((DefaultTableModel) tbTable.getModel());
     }
     
     private void tfSearchTextChangeActionPerformed(DocumentEvent evt) {
-        DinnerTable_BUS.findTableInfos((DefaultTableModel) tbTable.getModel(), tfSearch.getText());
+        restaurantManagementFacade.findTableInfos((DefaultTableModel) tbTable.getModel(), tfSearch.getText());
     }
 
     // Variables declaration - do not modify 

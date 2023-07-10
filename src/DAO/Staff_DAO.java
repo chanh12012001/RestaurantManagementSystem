@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author macbookpro
  */
 public class Staff_DAO implements IStaff_DAO{
-
+    SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
     static Connection conn;
     
     /**
@@ -26,7 +26,7 @@ public class Staff_DAO implements IStaff_DAO{
         ArrayList<Staff_DTO> staffs = new ArrayList<>();
 
         String sqlStatement = "Select * From NhanVien";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -47,7 +47,7 @@ public class Staff_DAO implements IStaff_DAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return staffs;
     }
     
@@ -62,7 +62,7 @@ public class Staff_DAO implements IStaff_DAO{
         Staff_DTO staff = null;
 
         String sqlStatement = "Select * from NhanVien where MaNV = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, id);
         try {
@@ -83,7 +83,7 @@ public class Staff_DAO implements IStaff_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return staff;
     }
 
@@ -96,12 +96,12 @@ public class Staff_DAO implements IStaff_DAO{
     @Override
     public boolean add(Staff_DTO staff) {
         String sqlStatement = "insert into NhanVien(MaNV, HoTen, NgaySinh, GioiTinh, SDT, ChucVu, Luong, DiaChi) values(?,?,?,?,?,?,?,?)";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn,
                 staff.getStaffID(), staff.getStaffName(), staff.getStaffBirth(), staff.getStaffSex(), staff.getStaffPhone(), staff.getStaffPosition(), staff.getStaffSalary(), staff.getStaffAddress());
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -115,11 +115,11 @@ public class Staff_DAO implements IStaff_DAO{
     @Override
     public boolean update(Staff_DTO staff) {
         String sqlStatement = "UPDATE NhanVien SET HoTen = ?, NgaySinh = ?, GioiTinh = ?, SDT = ?, ChucVu = ?, Luong = ?, DiaChi = ? WHERE MaNV = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn,  staff.getStaffName(), staff.getStaffBirth(), staff.getStaffSex(), staff.getStaffPhone(), staff.getStaffPosition(), staff.getStaffSalary(), staff.getStaffAddress(), staff.getStaffID());
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -133,11 +133,11 @@ public class Staff_DAO implements IStaff_DAO{
     @Override
     public boolean delete(String staffID) {
         String sqlStatement = "DELETE FROM NhanVien where MaNV = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, staffID);
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -149,7 +149,7 @@ public class Staff_DAO implements IStaff_DAO{
 
         String sqlStatement = "select * from NhanVien where HoTen like '%" + name + "%'";
 
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -171,7 +171,7 @@ public class Staff_DAO implements IStaff_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return staffs;
     }
 

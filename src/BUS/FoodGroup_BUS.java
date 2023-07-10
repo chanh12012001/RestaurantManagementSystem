@@ -17,7 +17,7 @@ public class FoodGroup_BUS {
     
     static IFoodGroup_DAO foodGroup_DAO = new FoodGroup_DAO() {};
     
-    public static void getAllFoodGroups(DefaultTableModel tableModel) {
+    public void getAllFoodGroups(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<FoodGroup_DTO> foodGroupList = foodGroup_DAO.getAll();
         for (FoodGroup_DTO foodGroup : foodGroupList) {
@@ -25,7 +25,7 @@ public class FoodGroup_BUS {
         }
     }
     
-    public static void getAllFoodGroupNames(DefaultComboBoxModel cbModel) {
+    public void getAllFoodGroupNames(DefaultComboBoxModel cbModel) {
        
         ArrayList<FoodGroup_DTO> foodGroupList = foodGroup_DAO.getAll();
         cbModel.addElement("Tất cả");
@@ -34,19 +34,19 @@ public class FoodGroup_BUS {
         }
     }
     
-    public static ArrayList<FoodGroup_DTO> getAllFoodGroups() {
+    public ArrayList<FoodGroup_DTO> getAllFoodGroups() {
         return foodGroup_DAO.getAll();
     }
     
-    public static FoodGroup_DTO getFoodGroupByName(String foodGroupName) {
+    public FoodGroup_DTO getFoodGroupByName(String foodGroupName) {
         return foodGroup_DAO.getFoodGroupByName(foodGroupName);
     }
     
-    public static FoodGroup_DTO getFoodGroupById(int foodGroupId) {
+    public FoodGroup_DTO getFoodGroupById(int foodGroupId) {
         return foodGroup_DAO.getFoodGroupById(foodGroupId);
     }
     
-    public static void addFoodGroup(FoodGroup_DTO foodGroup) {
+    public void addFoodGroup(FoodGroup_DTO foodGroup) {
         
         if (!"".equals(foodGroup.getName())) {
             FoodGroup_DTO foodGroupCheckDTO = getFoodGroupByName(foodGroup.getName());
@@ -69,7 +69,7 @@ public class FoodGroup_BUS {
         
     }
     
-    public static void updateFoodGroup(FoodGroup_DTO foodGroup) {
+    public void updateFoodGroup(FoodGroup_DTO foodGroup) {
         
         FoodGroup_DTO foodGroupCheckDTO = getFoodGroupByName(foodGroup.getName());
 
@@ -87,7 +87,7 @@ public class FoodGroup_BUS {
         }
     }
     
-    public static void deleteFoodGroup(int foodGroupId) {
+    public void deleteFoodGroup(int foodGroupId) {
 
         int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa nhóm món ăn", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
@@ -104,7 +104,7 @@ public class FoodGroup_BUS {
         }
     }
     
-    public static void findFoodGroups(DefaultTableModel tableModel, String name) {
+    public void findFoodGroups(DefaultTableModel tableModel, String name) {
         tableModel.setRowCount(0);
         ArrayList<FoodGroup_DTO> foodGroupList = foodGroup_DAO.findFoodGroups(name);
         for (FoodGroup_DTO foodGroup : foodGroupList) {

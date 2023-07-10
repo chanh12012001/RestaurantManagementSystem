@@ -1,6 +1,6 @@
 package GUI;
 
-import BUS.OrderBill_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.Statistic_DTO;
 import GUI.Component.RoundedButton;
 import Utils.DateUtils;
@@ -20,10 +20,7 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -42,6 +39,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class StatisticJFrame extends JPanel {
 
     private final Dimension dimension;
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public StatisticJFrame(Dimension dimension) {
         this.dimension = dimension;
@@ -52,7 +50,8 @@ public class StatisticJFrame extends JPanel {
     private void initComponents() {
         int bodyWidth = dimension.width;
         int bodyHeight = dimension.height;
-
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
+        
         lbDateNow = new JLabel();
         lbTurnover = new JLabel();
         lbTextFromDate = new JLabel();
@@ -95,7 +94,7 @@ public class StatisticJFrame extends JPanel {
         gbc.gridwidth = 1;
 
         Statistic_DTO statisticNow
-                = OrderBill_BUS.statisticIncomeInDay(DateUtils.formatDate(new Date()));
+                = restaurantManagementFacade.calculateIncomeByDay(DateUtils.formatDate(new Date()));
 
         lbDateNow = new JLabel(statisticNow.getIndex());
         lbDateNow.setFont(new Font("sansserif", 1, 16));
@@ -231,7 +230,7 @@ public class StatisticJFrame extends JPanel {
         gbcFilter.insets = new Insets(0, 0, 0, 20);
         gbcFilter.anchor = GridBagConstraints.WEST;
 
-        cbYearChooser.setModel(new DefaultComboBoxModel<>(new String[]{"2019", "2021", "2022"}));
+        cbYearChooser.setModel(new DefaultComboBoxModel<>(new String[]{"2019", "2021", "2022", "2023"}));
         cbYearChooser.setFocusable(false);
         cbYearChooser.setPreferredSize(new Dimension(100, 35));
         cbYearChooser.setFont(new java.awt.Font("sansserif", 0, 14));
@@ -293,7 +292,7 @@ public class StatisticJFrame extends JPanel {
         if (dtpFromDate.getDate() != null && dtpToDate.getDate() != null) {
             String fromDay = DateUtils.formatDate(dtpFromDate.getDate());
             String toDay = DateUtils.formatDate(dtpToDate.getDate());
-            loadChart(OrderBill_BUS.statisticIncomeByDate(fromDay, toDay), "Daily");
+            loadChart(restaurantManagementFacade.calculateIncomeByDate(fromDay, toDay), "Daily");
         } else {
             ArrayList<Statistic_DTO> statisticList = new ArrayList<>();
             statisticList.add(new Statistic_DTO("", 0));
@@ -313,13 +312,13 @@ public class StatisticJFrame extends JPanel {
                 btnStatistic.setVisible(false);
                 displayUIFormDateStatistic(false);
                 displayUIFormMonthStatistic(true);
-                loadChart(OrderBill_BUS.statisticIncomeByMonth(cbYearChooser.getSelectedItem().toString()), "Monthly");
+                loadChart(restaurantManagementFacade.calculateIncomeByMonth(cbYearChooser.getSelectedItem().toString()), "Monthly");
             }
             case "Năm" -> {
                 btnStatistic.setVisible(false);
                 displayUIFormDateStatistic(false);
                 displayUIFormMonthStatistic(false);
-                loadChart(OrderBill_BUS.statisticIncomeByYear(), "Yearly");
+                loadChart(restaurantManagementFacade.calculateIncomeByYear(), "Yearly");
             }
             default ->
                 throw new AssertionError();
@@ -341,7 +340,7 @@ public class StatisticJFrame extends JPanel {
 
     private void cbYearChooserActionPerformed(ActionEvent evt) {
         System.out.println(cbYearChooser.getSelectedItem());
-        loadChart(OrderBill_BUS.statisticIncomeByMonth(cbYearChooser.getSelectedItem().toString()), "Monthly");
+        loadChart(restaurantManagementFacade.calculateIncomeByMonth(cbYearChooser.getSelectedItem().toString()), "Monthly");
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Bill_BUS {
     
     static IBill_DAO bill_DAO = new Bill_DAO();
 
-    public static void getAllBills(DefaultTableModel tableModel) {
+    public void getAllBills(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<Bill_DTO> billList = bill_DAO.getAll();
         for (Bill_DTO bill : billList) {
@@ -23,7 +23,7 @@ public class Bill_BUS {
         }
     }
     
-    public static void getAllBillsBetweenFromDayAndToDay(DefaultTableModel tableModel, String fromDay, String toDay) {
+    public void getAllBillsBetweenFromDayAndToDay(DefaultTableModel tableModel, String fromDay, String toDay) {
         tableModel.setRowCount(0);
         ArrayList<Bill_DTO> billList = bill_DAO.getAllBillsBetweenFromDayAndToDay(fromDay, toDay);
         for (Bill_DTO bill : billList) {

@@ -22,7 +22,7 @@ public class DinnerTable_DTO {
         this.name = "";
         this.status = "";
     }
-
+    
     /**
      * Constructs a DinnerTable_DTO with name.
      *

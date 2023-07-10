@@ -1,16 +1,11 @@
 package GUI.Component.StaffManager;
 
-import BUS.Account_BUS;
-import BUS.Food_BUS;
-import BUS.Staff_BUS;
-import DTO.Account_DTO;
-import DTO.Food_DTO;
+import BUS.RestaurantManagementFacade;
 import DTO.Staff_DTO;
 import GUI.Component.RoundedButton;
 import GUI.Component.RoundedTextField;
 import Interface.EventTextChange;
 import Utils.DateUtils;
-import Utils.ImageUtils;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.BorderLayout;
@@ -54,6 +49,7 @@ public class StaffInfoListLayout extends JPanel {
     private final Dimension dimension;
     String[] properties = {"Mã nhân viên ", "Tên nhân viên", "Ngày sinh", "Giới tính", "Số điện thoại", "Chức vụ", "Lương", "Địa chỉ"};
     ArrayList<Integer> IDs = new ArrayList<>();
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public StaffInfoListLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -64,6 +60,8 @@ public class StaffInfoListLayout extends JPanel {
     private void initComponents() {
         int bodyWidth = dimension.width;
         int bodyHeight = dimension.height - dimension.height / 22 - 10;
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
+
 
         dateUtils = new DateUtils();
         tfFullName = new RoundedTextField();
@@ -91,8 +89,8 @@ public class StaffInfoListLayout extends JPanel {
             rowSelectedListener(e);
         });
 
-        Staff_BUS.getAllStaff(dtmTableModel);
-        IDs = Staff_BUS.getAllStaffID();
+        restaurantManagementFacade.getAllStaff(dtmTableModel);
+        IDs = restaurantManagementFacade.getAllStaffID();
 
         /**
          * info Staff Form Layout
@@ -554,9 +552,9 @@ public class StaffInfoListLayout extends JPanel {
     }
 
     private void loadStaff() {
-        Staff_BUS.getAllStaff((DefaultTableModel) tbStaffInfo.getModel());
+        restaurantManagementFacade.getAllStaff((DefaultTableModel) tbStaffInfo.getModel());
         IDs.clear();
-        IDs = Staff_BUS.getAllStaffID();
+        IDs = restaurantManagementFacade.getAllStaffID();
     }
 
     private void btnAddStaffActionPerformed(ActionEvent evt) {
@@ -572,7 +570,7 @@ public class StaffInfoListLayout extends JPanel {
         } else {
             Staff_DTO newStaff = new Staff_DTO(autoCreateNewStaffID(), tfFullName.getText(), DateUtils.formatDate(dtpDateOfBirth.getDate()), getStaffSex(), tfPhoneNumber.getText(), tfPosition.getText(), tfSalary.getText(), taAddress.getText());
 
-            Staff_BUS.addStaff(newStaff, cbPositionType.getSelectedItem().toString());
+            restaurantManagementFacade.addStaff(newStaff, cbPositionType.getSelectedItem().toString());
 
             loadStaff();
             clearData();
@@ -580,12 +578,12 @@ public class StaffInfoListLayout extends JPanel {
     }
 
     private void btnUpdateStaffActionPerformed(ActionEvent evt) {
-        Staff_DTO staff = Staff_BUS.getStaffById(staffID);
+        Staff_DTO staff = restaurantManagementFacade.getStaffById(staffID);
 
         if (staff != null) {
 
             Staff_DTO staffUpdate = new Staff_DTO(staff.getStaffID(), tfFullName.getText(), dateUtils.formatDate(dtpDateOfBirth.getDate()), getStaffSex(), tfPhoneNumber.getText(), tfPosition.getText(), tfSalary.getText(), taAddress.getText());
-            Staff_BUS.updateStaff(staffUpdate);
+            restaurantManagementFacade.updateStaff(staffUpdate);
             loadStaff();
             clearData();
 
@@ -596,13 +594,13 @@ public class StaffInfoListLayout extends JPanel {
     }
 
     private void btnDeleteStaffActionPerformed(ActionEvent evt) {
-        Staff_BUS.deleteStaff(staffID);
+        restaurantManagementFacade.deleteStaff(staffID);
         loadStaff();
         clearData();
     }
 
     private void tfSearchTextChangeActionPerformed(DocumentEvent evt) {
-        Staff_BUS.findStaffsByName((DefaultTableModel) tbStaffInfo.getModel(), tfSearch.getText());
+        restaurantManagementFacade.findStaffsByName((DefaultTableModel) tbStaffInfo.getModel(), tfSearch.getText());
     }
 
     private String autoCreateNewStaffID() {

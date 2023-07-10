@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class Bill_DAO implements IBill_DAO {
 
     static Connection conn;
+    SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
 
     /**
      * Get all bill in database
@@ -32,7 +33,7 @@ public class Bill_DAO implements IBill_DAO {
 
         String sqlStatement = "select HoaDon.ID,BanAn.TenBan,HoaDon.NgayThanhToan,HoaDon.SoTien from HoaDon,BanAn"
                 + " where HoaDon.IDBan = BanAn.ID AND TinhTrang = 1";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -52,7 +53,7 @@ public class Bill_DAO implements IBill_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return bills;
     }
 
@@ -83,7 +84,7 @@ public class Bill_DAO implements IBill_DAO {
         String sqlStatement = "select HoaDon.ID,BanAn.TenBan,HoaDon.NgayThanhToan,HoaDon.SoTien from HoaDon,BanAn"
                 + " where HoaDon.IDBan = BanAn.ID AND TinhTrang = 1"
                 + " AND DATE(substr(NgayThanhToan,-4,4) || '-' || substr(NgayThanhToan,4,2) || '-' || substr(NgayThanhToan,1,2)) between DATE(?) and DATE(?)";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, fromDateString, toDateString);
 
         try {
@@ -103,7 +104,7 @@ public class Bill_DAO implements IBill_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return bills;
     }
 

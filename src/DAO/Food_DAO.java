@@ -3,6 +3,7 @@ package DAO;
 
 import DTO.FoodGroup_DTO;
 import BUS.FoodGroup_BUS;
+import BUS.RestaurantManagementFacade;
 import DAO.Interface.IFood_DAO;
 import DTO.Food_DTO;
 import java.sql.Connection;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
  */
 public class Food_DAO implements IFood_DAO{
     static Connection conn;
+    SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
+    RestaurantManagementFacade restaurantManagementFacade = RestaurantManagementFacade.getInstance();
 
     /**
      * Get all food in database
@@ -27,7 +30,7 @@ public class Food_DAO implements IFood_DAO{
         ArrayList<Food_DTO> foods = new ArrayList<>();
 
         String sqlStatement = "Select ID, Image, TenMonAn, DonViTinh, Gia, TenNhom From MonAn, NhomMon where MaNhomMon = MaNhom order by ID ASC";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -49,7 +52,7 @@ public class Food_DAO implements IFood_DAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return foods;
     }
     
@@ -65,7 +68,7 @@ public class Food_DAO implements IFood_DAO{
         Food_DTO food = null;
 
         String sqlStatement = "Select * from MonAn where TenMonAn = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, name);
         try {
@@ -73,7 +76,7 @@ public class Food_DAO implements IFood_DAO{
                 food = new Food_DTO(
                         rs.getInt("ID"),
                         rs.getBytes("Image"),
-                        FoodGroup_BUS.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
+                        restaurantManagementFacade.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
                         rs.getString("TenMonAn"),
                         rs.getString("DonViTinh"),
                         rs.getInt("Gia")                       
@@ -85,7 +88,7 @@ public class Food_DAO implements IFood_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return food;
     }
     
@@ -100,7 +103,7 @@ public class Food_DAO implements IFood_DAO{
         Food_DTO food = null;
 
         String sqlStatement = "Select * from MonAn where ID = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, id);
         try {
@@ -108,7 +111,7 @@ public class Food_DAO implements IFood_DAO{
                 food = new Food_DTO(
                         rs.getInt("ID"),
                         rs.getBytes("Image"),
-                        FoodGroup_BUS.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
+                        restaurantManagementFacade.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
                         rs.getString("TenMonAn"),
                         rs.getString("DonViTinh"),
                         rs.getInt("Gia")                       
@@ -120,7 +123,7 @@ public class Food_DAO implements IFood_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return food;
     }
     
@@ -133,10 +136,10 @@ public class Food_DAO implements IFood_DAO{
     @Override
     public boolean add(Food_DTO food) {
         String sqlStatement = "insert into MonAn(MaNhomMon,TenMonAn,DonViTinh,Gia,Image) values(?,?,?,?,?)";
-        conn = SQLiteDBExecutor.connect();
-        FoodGroup_DTO foodGroup = FoodGroup_BUS.getFoodGroupByName(food.getFoodGroupName());
+        conn = dbExecutor.connect();
+        FoodGroup_DTO foodGroup = restaurantManagementFacade.getFoodGroupByName(food.getFoodGroupName());
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, foodGroup.getId(), food.getName(), food.getUnit(), food.getPrice(), food.getImage());
-        SQLiteDBExecutor.closeConnection(conn);     
+        dbExecutor.closeConnection();     
         return isSuccess;
     }
     
@@ -149,12 +152,12 @@ public class Food_DAO implements IFood_DAO{
     @Override
     public boolean update(Food_DTO food) {
         String sqlStatement = "UPDATE MonAn SET MaNhomMon = ?, TenMonAn = ?, DonViTinh = ?, Gia = ?, Image = ? WHERE ID = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
-        FoodGroup_DTO foodGroup = FoodGroup_BUS.getFoodGroupByName(food.getFoodGroupName());
+        FoodGroup_DTO foodGroup = restaurantManagementFacade.getFoodGroupByName(food.getFoodGroupName());
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, foodGroup.getId(), food.getName(), food.getUnit(), food.getPrice(), food.getImage(), food.getId());
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -168,11 +171,11 @@ public class Food_DAO implements IFood_DAO{
     @Override
     public boolean delete(String foodId) {
         String sqlStatement = "Delete from MonAn Where ID = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, Integer.valueOf(foodId));
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -190,7 +193,7 @@ public class Food_DAO implements IFood_DAO{
 
         String sqlStatement = "Select * From MonAn where TenMonAn like '%" +name+ "%'";
 
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -198,7 +201,7 @@ public class Food_DAO implements IFood_DAO{
                 Food_DTO food = new Food_DTO(
                         rs.getInt("ID"),
                         rs.getBytes("Image"),
-                        FoodGroup_BUS.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
+                        restaurantManagementFacade.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
                         rs.getString("TenMonAn"),
                         rs.getString("DonViTinh"),
                         rs.getInt("Gia")
@@ -211,7 +214,7 @@ public class Food_DAO implements IFood_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return foods;
     }
     
@@ -227,8 +230,8 @@ public class Food_DAO implements IFood_DAO{
 
         String sqlStatement = "Select * From MonAn where MaNhomMon = ?";
 
-        conn = SQLiteDBExecutor.connect();
-        FoodGroup_DTO foodGroup = FoodGroup_BUS.getFoodGroupByName(groupName);
+        conn = dbExecutor.connect();
+        FoodGroup_DTO foodGroup = restaurantManagementFacade.getFoodGroupByName(groupName);
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, foodGroup.getId());
 
         try {
@@ -236,7 +239,7 @@ public class Food_DAO implements IFood_DAO{
                 Food_DTO food = new Food_DTO(
                         rs.getInt("ID"),
                         rs.getBytes("Image"),
-                        FoodGroup_BUS.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
+                        restaurantManagementFacade.getFoodGroupById(rs.getInt("MaNhomMon")).getName(),
                         rs.getString("TenMonAn"),
                         rs.getString("DonViTinh"),
                         rs.getInt("Gia")
@@ -249,7 +252,7 @@ public class Food_DAO implements IFood_DAO{
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return foods;
     }
 }

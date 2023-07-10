@@ -1,19 +1,13 @@
 package BUS;
 
+import DAO.DinnerTable_DAO;
+import DAO.Interface.IDinnerTable_DAO;
 import DAO.Interface.IOrderBill_DAO;
 import DAO.OrderBill_DAO;
-import DAO.SQLiteDBExecutor;
 import DTO.OrderBill_DTO;
 import DTO.OrderDetail_DTO;
-import DTO.Statistic_DTO;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 /**
  *
  * @author bao20
@@ -21,6 +15,9 @@ import java.util.ArrayList;
 public class OrderBill_BUS {
 
     static IOrderBill_DAO orderBill_DAO = new OrderBill_DAO();
+    static IDinnerTable_DAO dinnerTable_DAO = new DinnerTable_DAO();
+
+    
 
     /**
      * Get food order of table by table id
@@ -28,7 +25,7 @@ public class OrderBill_BUS {
      * @param id dinner table id
      * @return A representing order table 's id
      */
-    public static ArrayList<OrderDetail_DTO> getBillDetailById(int id) {
+    public ArrayList<OrderDetail_DTO> getBillDetailById(int id) {
         return orderBill_DAO.getBillDetailById(id);
     }
 
@@ -38,7 +35,7 @@ public class OrderBill_BUS {
      * @param id dinner table id
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean add(int id) {
+    public boolean add(int id) {
         return orderBill_DAO.add(id);
     }
 
@@ -48,7 +45,7 @@ public class OrderBill_BUS {
      * @param id table id
      * @return A int representing id of bill
      */
-    public static int getCurrentBillId(int id) {
+    public int getCurrentBillId(int id) {
         return orderBill_DAO.getCurrentBillId(id);
     }
 
@@ -58,7 +55,7 @@ public class OrderBill_BUS {
      * @param id table id
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean deleteAllBillDetail(int id) {
+    public boolean deleteAllBillDetail(int id) {
         return orderBill_DAO.deleteAllBillDetail(id);
     }
 
@@ -68,10 +65,10 @@ public class OrderBill_BUS {
      * @param orderBill Order bill of table
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean checkoutBill(OrderBill_DTO orderBill) {
+    public boolean checkoutBill(OrderBill_DTO orderBill) {
         return orderBill_DAO.checkoutBill(orderBill)
                 && orderBill_DAO.deleteAllBillDetail(orderBill.getId())
-                && DinnerTable_BUS.setStatusEmpty(orderBill.getIdTable());
+                && dinnerTable_DAO.setStatusEmpty(orderBill.getIdTable());
     }
 
     /**
@@ -80,7 +77,7 @@ public class OrderBill_BUS {
      * @param orderDetail Order food detail
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean insertFood(OrderDetail_DTO orderDetail) {
+    public boolean insertFood(OrderDetail_DTO orderDetail) {
         return orderBill_DAO.insertFood(orderDetail);
     }
 
@@ -90,7 +87,7 @@ public class OrderBill_BUS {
      * @param orderDetail Order food detail
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean updateAmountFood(OrderDetail_DTO orderDetail) {
+    public boolean updateAmountFood(OrderDetail_DTO orderDetail) {
         return orderBill_DAO.updateAmountFood(orderDetail);
     }
 
@@ -100,7 +97,7 @@ public class OrderBill_BUS {
      * @param orderDetail Order food detail
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean deleteOrderDetail(OrderDetail_DTO orderDetail) {
+    public boolean deleteOrderDetail(OrderDetail_DTO orderDetail) {
         return orderBill_DAO.deleteOrderDetail(orderDetail);
     }
 
@@ -111,7 +108,7 @@ public class OrderBill_BUS {
      * @param idToTable To table id
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean changeTable(int idFromTable, int idToTable) {
+    public boolean changeTable(int idFromTable, int idToTable) {
         return orderBill_DAO.changeTable(idFromTable, idToTable);
     }
 
@@ -120,7 +117,7 @@ public class OrderBill_BUS {
      *
      * @return A list of bill
      */
-    public static ArrayList<OrderBill_DTO> getAll() {
+    public ArrayList<OrderBill_DTO> getAll() {
         return orderBill_DAO.getAll();
     }
 
@@ -130,7 +127,7 @@ public class OrderBill_BUS {
      * @param idBill
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean delete(String idBill) {
+    public boolean delete(String idBill) {
         return orderBill_DAO.delete(idBill);
     }
 
@@ -139,47 +136,7 @@ public class OrderBill_BUS {
      *
      * @return A Boolean true if success, otherwise false
      */
-    public static boolean deleteAll() {
+    public boolean deleteAll() {
         return orderBill_DAO.deleteAll();
-    }
-
-    /**
-     * Statistic income of month in year
-     *
-     * @param year year to statistic
-     * @return A list of total income each month in year
-     */
-    public static ArrayList<Statistic_DTO> statisticIncomeByMonth(String year) {
-        return orderBill_DAO.statisticIncomeByMonth(year);
-    }
-
-    /**
-     * Statistic income of each year
-     *
-     * @return A list of total income each year
-     */
-    public static ArrayList<Statistic_DTO> statisticIncomeByYear() {
-        return orderBill_DAO.statisticIncomeByYear();
-    }
-
-    /**
-     * Statistic income by date
-     *
-     * @param fromDate from date format dd/MM/YYYY
-     * @param toDate to date format dd/MM/YYYY
-     * @return A list of income in date
-     */
-    public static ArrayList<Statistic_DTO> statisticIncomeByDate(String fromDate, String toDate) {
-        return orderBill_DAO.statisticIncomeByDate(fromDate, toDate);
-    }
-
-    /**
-     * Statistic income in today
-     *
-     * @param date date format dd/MM/YYYY
-     * @return A list of income in date
-     */
-    public static Statistic_DTO statisticIncomeInDay(String date) {
-        return orderBill_DAO.statisticIncomeInDay(date);
     }
 }

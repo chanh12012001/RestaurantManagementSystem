@@ -8,37 +8,72 @@ import java.sql.*;
  * @since 1.0
  */
 public class SQLiteDBExecutor {
+    private static SQLiteDBExecutor instance;
+    private Connection conn;
     /**
      * Connect to database
      *
      * @return A Connection to database
      */
-    public static Connection connect() {
-        Connection conn = null;
-        try {
-
-            // create a connection to the database
-            conn = DriverManager.getConnection(Constant.DB_URL);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private SQLiteDBExecutor() {
+        // private constructor to prevent instantiation outside the class
+    }
+    
+    public static synchronized SQLiteDBExecutor getInstance() {
+        if (instance == null) {
+            instance = new SQLiteDBExecutor();
         }
-
+        return instance;
+    }
+    
+    public Connection connect() {
+        if (conn == null) {
+            try {
+                // create a connection to the database
+                conn = DriverManager.getConnection(Constant.DB_URL);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return conn;
     }
+//    public static Connection connect() {
+//        Connection conn = null;
+//        try {
+//
+//            // create a connection to the database
+//            conn = DriverManager.getConnection(Constant.DB_URL);
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return conn;
+//    }
 
+    
     /**
      * Close connection database
      *
      * @param conn Connection to database
      */
-    public static void closeConnection(Connection conn) {
+     public void closeConnection() {
         try {
-            conn.close();
+            if (conn != null) {
+                conn.close();
+                conn = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+//    public static void closeConnection(Connection conn) {
+//        try {
+//            conn.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * Execute query to database with parameter

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author bao20
  */
 public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO {
-
+    SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
     static Connection conn;
 
     /**
@@ -29,7 +29,7 @@ public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO
 
         String sqlStatement = "Select * from PhieuNhap";
 
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -53,7 +53,7 @@ public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO
             e.printStackTrace();
         }
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return warehouseReceipts;
     }
 
@@ -66,7 +66,7 @@ public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO
     @Override
     public boolean add(WarehouseReceipt_DTO warehouseReceipt) {
         String sqlStatement = "Insert into PhieuNhap(MaNL,TenNL,DonVi,SoLuong,DonGia,NgayNhap,CungCap,ThuKho) values(?,?,?,?,?,?,?,)";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn,
                 warehouseReceipt.getIdIngredient(),
@@ -79,7 +79,7 @@ public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO
                 warehouseReceipt.getStorekeeper()
         );
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -93,10 +93,10 @@ public class WarehouseReceipt_DAO implements DAO.Interface.IWarehouseReceipt_DAO
     @Override
     public boolean delete(String id) {
         String sqlStatement = "Delete from PhieuNhap Where MaPN = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, id);
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }

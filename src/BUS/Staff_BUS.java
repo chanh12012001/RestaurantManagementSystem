@@ -19,7 +19,7 @@ public class Staff_BUS {
     static IStaff_DAO staff_DAO = new Staff_DAO();
     static IAccount_DAO account_DAO = new Account_DAO();
     
-    public static void getAllStaff(DefaultTableModel tableModel) {
+    public void getAllStaff(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<Staff_DTO> staffList = staff_DAO.getAll();
         for (Staff_DTO staff : staffList) {
@@ -27,11 +27,11 @@ public class Staff_BUS {
         }
     }
     
-    public static Staff_DTO getStaffById(String id) {
+    public Staff_DTO getStaffById(String id) {
         return staff_DAO.getStaffById(id);
     }
     
-    public static ArrayList<Integer> getAllStaffID() {
+    public ArrayList<Integer> getAllStaffID() {
         ArrayList<Staff_DTO> staffList = staff_DAO.getAll();
         ArrayList<Integer> ids = new ArrayList<>();
         for (Staff_DTO staff : staffList) {
@@ -40,7 +40,7 @@ public class Staff_BUS {
         return ids;
     }
     
-    public static void findStaffsByName(DefaultTableModel tableModel, String name) {
+    public void findStaffsByName(DefaultTableModel tableModel, String name) {
         tableModel.setRowCount(0);
         ArrayList<Staff_DTO> staffList = staff_DAO.findStaffsByName(name);
         for (Staff_DTO staff : staffList) {
@@ -48,7 +48,7 @@ public class Staff_BUS {
         }
     }
     
-     public static void addStaff(Staff_DTO staff, String positionType) {
+     public void addStaff(Staff_DTO staff, String positionType) {
         
         if (!"".equals(staff.getStaffName()) && !"".equals(staff.getStaffBirth()) && !"".equals(staff.getStaffSex()) && !"".equals(staff.getStaffPhone()) && !"".equals(staff.getStaffPosition()) && !"".equals(staff.getStaffSalary()) && !"".equals(staff.getStaffAddress())) {
             
@@ -69,7 +69,7 @@ public class Staff_BUS {
         
     }
      
-     public static void updateStaff(Staff_DTO staff) {
+     public void updateStaff(Staff_DTO staff) {
                 
         if (!"".equals(staff.getStaffName()) && !"".equals(staff.getStaffBirth()) && !"".equals(staff.getStaffSex()) && !"".equals(staff.getStaffPhone()) && !"".equals(staff.getStaffPosition()) && !"".equals(staff.getStaffSalary()) && !"".equals(staff.getStaffAddress())) {
             
@@ -88,7 +88,7 @@ public class Staff_BUS {
         }     
     }
      
-     public static void deleteStaff(String staffID) {
+     public void deleteStaff(String staffID) {
         if (!"".equals(staffID)) {
             Staff_DTO staff = getStaffById(staffID);
             int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa nhân viên", JOptionPane.YES_NO_OPTION);

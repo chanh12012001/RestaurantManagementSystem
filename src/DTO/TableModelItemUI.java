@@ -1,6 +1,6 @@
 package DTO;
 
-public class TableModelItemUI {
+public class TableModelItemUI{
     private int iD;
     private String name;
     private String status;

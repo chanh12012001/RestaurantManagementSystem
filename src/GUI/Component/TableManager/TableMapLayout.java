@@ -2,10 +2,7 @@ package GUI.Component.TableManager;
 
 import BUS.DinnerTable_BUS;
 import BUS.TableItemUI;
-import BUS.BillDetail_BUS;
-import BUS.FoodGroup_BUS;
-import BUS.Food_BUS;
-import BUS.OrderBill_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.BillDetail_DTO;
 import DTO.DinnerTable_DTO;
 import DTO.FoodGroup_DTO;
@@ -56,6 +53,7 @@ public class TableMapLayout extends JPanel {
 
     private final Dimension dimension;
     public int indexTable = -1;
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public TableMapLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -65,7 +63,8 @@ public class TableMapLayout extends JPanel {
     private void initComponents() {
         int width = dimension.width;
         int height = dimension.height;
-
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance(); 
+        
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
         setPreferredSize(new Dimension(width, height - height / 22 - 10));
@@ -599,7 +598,7 @@ public class TableMapLayout extends JPanel {
     }
 
     private void loadFoodGroup(JPanel filterFoodGroupLayout) {
-        ArrayList<FoodGroup_DTO> foodGroups = FoodGroup_BUS.getAllFoodGroups();
+        ArrayList<FoodGroup_DTO> foodGroups = restaurantManagementFacade.getAllFoodGroups();
 
         //Set All button
         RoundedButton btnButtonAll = btnFoodGroupItem("Tất cả");
@@ -642,9 +641,9 @@ public class TableMapLayout extends JPanel {
 
         if (name.equals("Tất cả")) {
 
-            foods = Food_BUS.getAllFoods();
+            foods = restaurantManagementFacade.getAllFoods();
         } else {
-            foods = Food_BUS.findFoodsByGroupName(name);
+            foods = restaurantManagementFacade.findFoodsByGroupNames(name);
         }
 
         for (int i = 0; i < foods.size(); i++) {
@@ -660,7 +659,7 @@ public class TableMapLayout extends JPanel {
                     if (e.getClickCount() % 2 == 0) {
                         for (int i = 0; i < billDetailList.size(); i++) {
                             if (billDetailList.get(i).getFoodName().equals(tempFoodName)) {
-                                OrderBill_BUS.updateAmountFood(new OrderDetail_DTO(
+                                restaurantManagementFacade.updateAmountFood(new OrderDetail_DTO(
                                         selectedOrderBillId, tempFoodId,
                                         billDetailList.get(i).getQuantity() + 1,
                                         (billDetailList.get(i).getQuantity() + 1) * tempFoodPrice
@@ -669,7 +668,7 @@ public class TableMapLayout extends JPanel {
                                 return;
                             }
                         }
-                        OrderBill_BUS.insertFood(new OrderDetail_DTO(
+                        restaurantManagementFacade.insertFoodToBill(new OrderDetail_DTO(
                                 selectedOrderBillId, tempFoodId, 1, tempFoodPrice));
                         loadBillDetailByTableDinnerId(indexTable);
                     }
@@ -699,17 +698,17 @@ public class TableMapLayout extends JPanel {
         if (evt.getClickCount() == 1) {
             getInfoDinnerTable(indexTable);
             loadBillDetailByTableDinnerId(indexTable);
-            selectedOrderBillId = OrderBill_BUS.getCurrentBillId(indexTable);
+            selectedOrderBillId = restaurantManagementFacade.getCurrentBillId(indexTable);
 
         }
         if (evt.getClickCount() == 2) {
-            DinnerTable_DTO dinnerTableInfo = DinnerTable_BUS.getTableInfoByTableId(indexTable);
+            DinnerTable_DTO dinnerTableInfo = restaurantManagementFacade.getTableInfoByTableId(indexTable);
             if ("Trống".equals(dinnerTableInfo.getStatus())) {
                 int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn mở " + dinnerTableInfo.getName(), "Mở bàn", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
-                    DinnerTable_BUS.setStatusOccupied(dinnerTableInfo.getId());
+                    restaurantManagementFacade.setStatusOccupied(dinnerTableInfo.getId());
                     getInfoDinnerTable(indexTable);
-                    selectedOrderBillId = OrderBill_BUS.getCurrentBillId(indexTable);
+                    selectedOrderBillId = restaurantManagementFacade.getCurrentBillId(indexTable);
                     loadTable();
                     displayFoodChooserListLayout(true);
                 } else {
@@ -722,13 +721,13 @@ public class TableMapLayout extends JPanel {
     }
 
     private void btnOpenTableActionPerformed(ActionEvent evt) {
-        DinnerTable_DTO dinnerTableInfo = DinnerTable_BUS.getTableInfoByTableId(indexTable);
+        DinnerTable_DTO dinnerTableInfo = restaurantManagementFacade.getTableInfoByTableId(indexTable);
         if ("Trống".equals(dinnerTableInfo.getStatus())) {
             int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn mở " + dinnerTableInfo.getName(), "Mở bàn", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                DinnerTable_BUS.setStatusOccupied(dinnerTableInfo.getId());
+                restaurantManagementFacade.setStatusOccupied(dinnerTableInfo.getId());
                 getInfoDinnerTable(indexTable);
-                selectedOrderBillId = OrderBill_BUS.getCurrentBillId(indexTable);
+                selectedOrderBillId = restaurantManagementFacade.getCurrentBillId(indexTable);
                 loadTable();
                 displayFoodChooserListLayout(true);
             }
@@ -742,7 +741,7 @@ public class TableMapLayout extends JPanel {
     }
 
     private void btnPaymentActionPerformed(ActionEvent evt) {
-        OrderBill_BUS.checkoutBill(new OrderBill_DTO(
+        restaurantManagementFacade.checkoutBill(new OrderBill_DTO(
                 selectedOrderBillId,
                 indexTable,
                 "",
@@ -764,7 +763,7 @@ public class TableMapLayout extends JPanel {
         int row = tbBillDetails.getSelectedRow();
         if (row != -1) {
 
-            OrderBill_BUS.updateAmountFood(new OrderDetail_DTO(
+            restaurantManagementFacade.updateAmountFood(new OrderDetail_DTO(
                     selectedOrderBillId, billDetailList.get(row).getiDFood(),
                     billDetailList.get(row).getQuantity() + 1,
                     billDetailList.get(row).getPrice() * billDetailList.get(row).getQuantity()
@@ -779,7 +778,7 @@ public class TableMapLayout extends JPanel {
         if (row != -1) {
 
             if (billDetailList.get(row).getQuantity() > 0) {
-                OrderBill_BUS.updateAmountFood(new OrderDetail_DTO(
+                restaurantManagementFacade.updateAmountFood(new OrderDetail_DTO(
                         selectedOrderBillId, billDetailList.get(row).getiDFood(),
                         billDetailList.get(row).getQuantity() - 1,
                         billDetailList.get(row).getPrice() * billDetailList.get(row).getQuantity()
@@ -793,7 +792,7 @@ public class TableMapLayout extends JPanel {
     private void btnRemoveFoodPerfomed(ActionEvent evt) {
         int row = tbBillDetails.getSelectedRow();
         if (row != -1) {
-            OrderBill_BUS.deleteOrderDetail(new OrderDetail_DTO(
+            restaurantManagementFacade.deleteOrderDetail(new OrderDetail_DTO(
                     selectedOrderBillId, billDetailList.get(row).getiDFood(),
                     0,
                     0
@@ -828,7 +827,7 @@ public class TableMapLayout extends JPanel {
         System.out.println("DISPLAY INFO DINNER TABLE");
 
         if (indexTable != -1) {
-            DinnerTable_DTO dinnerTableInfo = DinnerTable_BUS.getTableInfoByTableId(indexTable);
+            DinnerTable_DTO dinnerTableInfo = restaurantManagementFacade.getTableInfoByTableId(indexTable);
             lbTableName.setText(dinnerTableInfo.getName());
             lbTableStatus.setText(dinnerTableInfo.getStatus());
             if (!"Trống".equals(dinnerTableInfo.getStatus())) {
@@ -846,7 +845,7 @@ public class TableMapLayout extends JPanel {
         int totalMoney = 0;
         System.out.println("LOAD BILL");
 
-        billDetailList = BillDetail_BUS.loadBillDetailByTableId((DefaultTableModel) tbBillDetails.getModel(), tableId);  // lấy hóa đơn của bàn đang được click
+        billDetailList = restaurantManagementFacade.loadBillDetailByTableId((DefaultTableModel) tbBillDetails.getModel(), tableId);  // lấy hóa đơn của bàn đang được click
         if (billDetailList == null) {
             tfProvisionalAmount.setText("0");
             lbTotalPayable.setText("0");

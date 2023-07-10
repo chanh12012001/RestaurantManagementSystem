@@ -41,7 +41,7 @@ public class OrderBill_DTO {
         this.checkoutDate = checkoutDate;
         this.total = total;
     }
-
+    
     /**
      *
      * @param id

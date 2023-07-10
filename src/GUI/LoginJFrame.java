@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.Account_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.Account_DTO;
 import java.awt.Color;
 import javax.swing.JOptionPane;
@@ -10,10 +11,12 @@ public class LoginJFrame extends javax.swing.JFrame {
     /**
      * Creates new form LoginJFrame
      */
+    RestaurantManagementFacade restaurantManagementFacade;
     public LoginJFrame() {
         initComponents();
         getContentPane().setBackground(new Color(224, 235, 235));
         setLocationRelativeTo(null);
+        restaurantManagementFacade = RestaurantManagementFacade.getInstance();
     }
 
     @SuppressWarnings("unchecked")
@@ -167,7 +170,7 @@ public class LoginJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tfUserNameActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        Account_DTO account = Account_BUS.Login(tfUserName.getText(), String.valueOf(tfPassword.getPassword()));
+        Account_DTO account = restaurantManagementFacade.Login(tfUserName.getText(), String.valueOf(tfPassword.getPassword()));
         if (account != null) {
             this.dispose();
             new DashboardJFrame(account.getAccountType()).setVisible(true);

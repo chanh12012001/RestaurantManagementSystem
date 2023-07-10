@@ -1,6 +1,6 @@
 package GUI.Component.FoodManager;
 
-import BUS.FoodGroup_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.FoodGroup_DTO;
 import GUI.Component.RoundedButton;
 import GUI.Component.RoundedTextField;
@@ -35,7 +35,7 @@ public class FoodGroupLayout extends JPanel{
     private final Dimension dimension;
     
     String[] properties = { "Mã nhóm món ", "Tên nhóm món"};
-
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public FoodGroupLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -46,7 +46,7 @@ public class FoodGroupLayout extends JPanel{
     private void initComponents() {
        int foodGroupWidth = dimension.width;
        int foodGroupHeight = dimension.height - dimension.height / 22 - 10;
-       
+       restaurantManagementFacade = RestaurantManagementFacade.getInstance();
        
        
        tfFoodGroupID = new RoundedTextField();
@@ -67,7 +67,7 @@ public class FoodGroupLayout extends JPanel{
             rowSelectedListener(e);
         });
 
-        FoodGroup_BUS.getAllFoodGroups(dtmTableModel);
+        restaurantManagementFacade.getAllFoodGroups(dtmTableModel);
        
         /**
          * info Staff Form Layout
@@ -319,14 +319,14 @@ public class FoodGroupLayout extends JPanel{
     }
     
     private void btnAddFoodGroupActionPerformed(ActionEvent evt) {  
-        FoodGroup_BUS.addFoodGroup(new FoodGroup_DTO(tfFoodGroupName.getText()));
-        FoodGroup_BUS.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
+        restaurantManagementFacade.addFoodGroup(new FoodGroup_DTO(tfFoodGroupName.getText()));
+        restaurantManagementFacade.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
     } 
     
     private void btnUpdateFoodGroupActionPerformed(ActionEvent evt) {  
         try {
-            FoodGroup_BUS.updateFoodGroup(new FoodGroup_DTO(Integer.parseInt(tfFoodGroupID.getText()), tfFoodGroupName.getText()));
-            FoodGroup_BUS.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
+            restaurantManagementFacade.updateFoodGroup(new FoodGroup_DTO(Integer.parseInt(tfFoodGroupID.getText()), tfFoodGroupName.getText()));
+            restaurantManagementFacade.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm món ăn cần cập nhật", "Cập nhật nhóm món ăn",
                     JOptionPane.WARNING_MESSAGE);
@@ -335,8 +335,8 @@ public class FoodGroupLayout extends JPanel{
     
     private void btnDeleteFoodGroupActionPerformed(ActionEvent evt) { 
         try {
-            FoodGroup_BUS.deleteFoodGroup(Integer.parseInt(tfFoodGroupID.getText()));
-            FoodGroup_BUS.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
+            restaurantManagementFacade.deleteFoodGroup(Integer.parseInt(tfFoodGroupID.getText()));
+            restaurantManagementFacade.getAllFoodGroups((DefaultTableModel) tbFoodGroup.getModel());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhóm món ăn cần xoá", "Xoá nhóm món ăn",
                     JOptionPane.WARNING_MESSAGE);
@@ -345,7 +345,7 @@ public class FoodGroupLayout extends JPanel{
     } 
     
     private void tfSearchTextChangeActionPerformed(DocumentEvent evt) {
-        FoodGroup_BUS.findFoodGroups((DefaultTableModel) tbFoodGroup.getModel(), tfSearch.getText());
+        restaurantManagementFacade.findFoodGroups((DefaultTableModel) tbFoodGroup.getModel(), tfSearch.getText());
     }
     
     // Variables declaration - do not modify 

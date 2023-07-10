@@ -15,9 +15,9 @@ import javax.swing.table.DefaultTableModel;
  * @author macbookpro
  */
 public class Food_BUS {
-    static IFood_DAO food_DAO = new Food_DAO() {};
+    static IFood_DAO food_DAO = new Food_DAO();
 
-    public static void getAllFoods(DefaultTableModel tableModel) {
+    public void getAllFoods(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         ArrayList<Food_DTO> foodList = food_DAO.getAll();
         for (Food_DTO food : foodList) {
@@ -26,19 +26,19 @@ public class Food_BUS {
         }
     }
     
-    public static ArrayList<Food_DTO> getAllFoods() {
+    public ArrayList<Food_DTO> getAllFoods() {
         return food_DAO.getAll();
     }
     
-    public static Food_DTO getFoodByName(String foodName) {
+    public Food_DTO getFoodByName(String foodName) {
         return food_DAO.getFoodByName(foodName);
     }
     
-    public static Food_DTO getFoodById(int id) {
+    public Food_DTO getFoodById(int id) {
         return food_DAO.getFoodById(id);
     }
     
-    public static void addFood(Food_DTO food) {
+    public void addFood(Food_DTO food) {
         
         if (!"".equals(food.getFoodGroupName()) && !"".equals(food.getName()) && !"".equals(food.getUnit()) && food.getPrice() != -1 && food.getImage() != null) {
             Food_DTO foodCheckDTO = getFoodByName(food.getName());  
@@ -63,7 +63,7 @@ public class Food_BUS {
         
     }
     
-    public static void updateFood(Food_DTO food) {
+    public void updateFood(Food_DTO food) {
                 
         if (!"".equals(food.getFoodGroupName()) && !"".equals(food.getName()) && !"".equals(food.getUnit()) && food.getPrice() != -1 && food.getImage() != null) {
             Food_DTO foodCheckDTO = getFoodByName(food.getFoodGroupName());
@@ -86,7 +86,7 @@ public class Food_BUS {
         }     
     }
     
-    public static void deleteFood(String foodId) {
+    public void deleteFood(String foodId) {
         int id = Integer.valueOf(foodId);
         if (id != -1) {
             int result = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa món ăn", JOptionPane.YES_NO_OPTION);
@@ -109,7 +109,7 @@ public class Food_BUS {
         
     }
     
-    public static void findFoodsByName(DefaultTableModel tableModel, String name) {
+    public void findFoodsByName(DefaultTableModel tableModel, String name) {
         tableModel.setRowCount(0);
         ArrayList<Food_DTO> foodList = food_DAO.findFoodsByName(name);
         for (Food_DTO food : foodList) {
@@ -118,7 +118,7 @@ public class Food_BUS {
         }
     }
     
-    public static void findFoodsByGroupName(DefaultTableModel tableModel, String groupName) {
+    public void findFoodsByGroupName(DefaultTableModel tableModel, String groupName) {
         tableModel.setRowCount(0);
         ArrayList<Food_DTO> foodList = food_DAO.findFoodsByGroupName(groupName);
         for (Food_DTO food : foodList) {
@@ -127,7 +127,7 @@ public class Food_BUS {
         }
     }
     
-    public static ArrayList<Food_DTO> findFoodsByGroupName(String groupName) {
+    public ArrayList<Food_DTO> findFoodsByGroupNames(String groupName) {
         return food_DAO.findFoodsByGroupName(groupName);
     }
 }

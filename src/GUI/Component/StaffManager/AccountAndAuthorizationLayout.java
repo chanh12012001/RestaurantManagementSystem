@@ -1,7 +1,6 @@
 package GUI.Component.StaffManager;
 
-import BUS.Account_BUS;
-import BUS.Staff_BUS;
+import BUS.RestaurantManagementFacade;
 import DTO.Account_DTO;
 import GUI.Component.RoundedButton;
 import GUI.Component.RoundedTextField;
@@ -34,7 +33,7 @@ public class AccountAndAuthorizationLayout extends JPanel{
     private final Dimension dimension;
     
     String[] properties = { "Tài khoản ", "Mật khẩu", "Quyền đăng nhập"};
-
+    RestaurantManagementFacade restaurantManagementFacade;
 
     public AccountAndAuthorizationLayout(Dimension dimension) {
         this.dimension = dimension;
@@ -45,7 +44,7 @@ public class AccountAndAuthorizationLayout extends JPanel{
     private void initComponents() {
        int width = dimension.width;
        int height = dimension.height - dimension.height / 22 - 10;
-           
+       restaurantManagementFacade = RestaurantManagementFacade.getInstance();
        
        tfUserName = new RoundedTextField();
        tfPassword = new RoundedTextField();
@@ -63,7 +62,7 @@ public class AccountAndAuthorizationLayout extends JPanel{
             rowSelectedListener(e);
         });
 
-        Account_BUS.getAllAccount(dtmTableModel);
+        restaurantManagementFacade.getAllAccount(dtmTableModel);
         /**
          * info Staff Form Layout
          */
@@ -256,8 +255,8 @@ public class AccountAndAuthorizationLayout extends JPanel{
     }
     
     private void btnUpdateAccountActionPerformed(ActionEvent evt) {
-        Account_BUS.update(new Account_DTO(tfUserName.getText(), tfPassword.getText(), ""));
-        Account_BUS.getAllAccount((DefaultTableModel) tbAccount.getModel());
+        restaurantManagementFacade.update(new Account_DTO(tfUserName.getText(), tfPassword.getText(), ""));
+        restaurantManagementFacade.getAllAccount((DefaultTableModel) tbAccount.getModel());
     } 
    
     // Variables declaration - do not modify 

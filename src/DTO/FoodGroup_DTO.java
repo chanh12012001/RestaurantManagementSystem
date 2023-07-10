@@ -15,7 +15,7 @@ public class FoodGroup_DTO {
         this.id = -1;
         this.name = "";
     }
-
+    
     /**
      * Constructs a FoodGroup_DTO without id.
      *

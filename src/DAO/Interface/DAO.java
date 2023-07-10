@@ -15,7 +15,7 @@ public interface DAO<T> {
      */
     public ArrayList<T> getAll();
     
-    /**
+    /** 
      * Add object to database
      * @param obj object to add
      * @return true if add success, otherwise false

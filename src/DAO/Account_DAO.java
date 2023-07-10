@@ -12,6 +12,9 @@ import java.util.ArrayList;
  * @author macbookpro
  */
 public class Account_DAO implements IAccount_DAO {
+    
+    SQLiteDBExecutor dbExecutor = SQLiteDBExecutor.getInstance();
+
 
     /**
      * Get all account in database
@@ -23,7 +26,7 @@ public class Account_DAO implements IAccount_DAO {
         ArrayList<Account_DTO> accounts = new ArrayList<>();
 
         String sqlStatement = "Select * From NGUOIDUNG";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn);
 
         try {
@@ -40,7 +43,7 @@ public class Account_DAO implements IAccount_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return accounts;
     }
 
@@ -53,7 +56,7 @@ public class Account_DAO implements IAccount_DAO {
     @Override
     public Account_DTO get(String name) {
         String sqlStatement = "Select * From NGUOIDUNG where TaiKhoan = ? ";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
         ResultSet rs = SQLiteDBExecutor.executeQuery(sqlStatement, conn, name);
 
         Account_DTO account = null;
@@ -71,7 +74,7 @@ public class Account_DAO implements IAccount_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
         return account;
     }
 
@@ -84,11 +87,11 @@ public class Account_DAO implements IAccount_DAO {
     @Override
     public boolean add(Account_DTO account) {
         String sqlStatement = "insert into NGUOIDUNG(TaiKhoan,MatKhau,LoaiTK) values(?,?,?)";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, account.getUsername(), account.getPassword(), account.getAccountType());
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
 
@@ -103,11 +106,11 @@ public class Account_DAO implements IAccount_DAO {
     @Override
     public boolean update(Account_DTO account) {
         String sqlStatement = "Update NGUOIDUNG Set MatKhau = ? Where TaiKhoan = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, account.getPassword(), account.getUsername());
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
@@ -121,11 +124,11 @@ public class Account_DAO implements IAccount_DAO {
     @Override
     public boolean delete(String username) {
         String sqlStatement = "Delete from NGUOIDUNG Where Taikhoan = ?";
-        conn = SQLiteDBExecutor.connect();
+        conn = dbExecutor.connect();
 
         boolean isSuccess = SQLiteDBExecutor.executeNonQuery(sqlStatement, conn, username);
 
-        SQLiteDBExecutor.closeConnection(conn);
+        dbExecutor.closeConnection();
 
         return isSuccess;
     }
