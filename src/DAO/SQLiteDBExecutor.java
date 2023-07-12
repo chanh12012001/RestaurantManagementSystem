@@ -37,20 +37,6 @@ public class SQLiteDBExecutor {
         }
         return conn;
     }
-//    public static Connection connect() {
-//        Connection conn = null;
-//        try {
-//
-//            // create a connection to the database
-//            conn = DriverManager.getConnection(Constant.DB_URL);
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return conn;
-//    }
-
     
     /**
      * Close connection database

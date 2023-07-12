@@ -3,6 +3,8 @@ package GUI.Component.TableManager;
 import BUS.DinnerTable_BUS;
 import BUS.TableItemUI;
 import BUS.RestaurantManagementFacade;
+import DAO.observer.Observer;
+import DAO.observer.PDFGenerateOrderBillObserver;
 import DTO.BillDetail_DTO;
 import DTO.DinnerTable_DTO;
 import DTO.FoodGroup_DTO;
@@ -741,6 +743,9 @@ public class TableMapLayout extends JPanel {
     }
 
     private void btnPaymentActionPerformed(ActionEvent evt) {
+        PDFGenerateOrderBillObserver pdfGenerator = new PDFGenerateOrderBillObserver();
+        Observer.addObserver(pdfGenerator);
+        
         restaurantManagementFacade.checkoutBill(new OrderBill_DTO(
                 selectedOrderBillId,
                 indexTable,

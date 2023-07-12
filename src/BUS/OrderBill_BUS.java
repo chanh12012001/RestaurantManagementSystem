@@ -4,6 +4,7 @@ import DAO.DinnerTable_DAO;
 import DAO.Interface.IDinnerTable_DAO;
 import DAO.Interface.IOrderBill_DAO;
 import DAO.OrderBill_DAO;
+import DAO.observer.Observer;
 import DTO.OrderBill_DTO;
 import DTO.OrderDetail_DTO;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class OrderBill_BUS {
 
     static IOrderBill_DAO orderBill_DAO = new OrderBill_DAO();
     static IDinnerTable_DAO dinnerTable_DAO = new DinnerTable_DAO();
-
+    Observer observer = new Observer();
     
 
     /**
@@ -66,9 +67,15 @@ public class OrderBill_BUS {
      * @return A Boolean true if success, otherwise false
      */
     public boolean checkoutBill(OrderBill_DTO orderBill) {
-        return orderBill_DAO.checkoutBill(orderBill)
+        boolean success = orderBill_DAO.checkoutBill(orderBill)
                 && orderBill_DAO.deleteAllBillDetail(orderBill.getId())
                 && dinnerTable_DAO.setStatusEmpty(orderBill.getIdTable());
+ 
+        if (success) {
+            Observer.notifyObservers(orderBill);
+        }
+ 
+        return success;
     }
 
     /**
